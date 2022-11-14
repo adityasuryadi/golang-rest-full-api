@@ -1,6 +1,9 @@
 package simple
 
+import "errors"
+
 type SimpleRepository struct {
+	Error bool
 }
 
 type SimpleService struct {
@@ -9,12 +12,22 @@ type SimpleService struct {
 
 // buat provider
 func NewSimpleRepository() *SimpleRepository {
-	return &SimpleRepository{}
+	return &SimpleRepository{
+		Error: true,
+	}
 }
 
 // buat provider
-func NewSimpleService(repository *SimpleRepository) *SimpleService {
-	return &SimpleService{
-		SimpleRepository: repository,
+/*
+handle error google wire
+*/
+func NewSimpleService(repository *SimpleRepository) (*SimpleService, error) {
+	if repository.Error {
+		return nil, errors.New("failed create service")
+	} else {
+		return &SimpleService{
+			SimpleRepository: repository,
+		}, nil
 	}
+
 }

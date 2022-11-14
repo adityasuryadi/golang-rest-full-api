@@ -6,7 +6,11 @@ import (
 	"testing"
 )
 
+// pemanggilan dependency injection yg sudah di generate google wire
+
+//tambah handle error
 func TestSimpleService(t *testing.T) {
-	simpleService := simple.InitializedService()
+	simpleService, err := simple.InitializedService()
+	fmt.Println(err)
 	fmt.Println(simpleService)
 }

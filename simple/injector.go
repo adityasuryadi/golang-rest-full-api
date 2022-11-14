@@ -9,12 +9,18 @@ package simple
 
 import "github.com/google/wire"
 
-func InitializedService() *SimpleService {
+/*
+untuk handle error tambahkan return error pada initializesService
+
+*/
+
+func InitializedService() (*SimpleService, error) {
 	/*
 		kenapa return nil?karena semua nya kan di handle sama google wire
 		dependency mana aja yang di butuhin
 	*/
 	wire.Build(NewSimpleRepository, NewSimpleService)
 
-	return nil
+	// karena di atas tambah return error tambah return 1 nil lagi
+	return nil, nil
 }
