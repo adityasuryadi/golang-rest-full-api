@@ -14,7 +14,7 @@ untuk handle error tambahkan return error pada initializesService
 
 */
 
-func InitializedService() (*SimpleService, error) {
+func InitializedService(isError bool) (*SimpleService, error) {
 	/*
 		kenapa return nil?karena semua nya kan di handle sama google wire
 		dependency mana aja yang di butuhin

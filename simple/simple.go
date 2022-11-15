@@ -11,9 +11,14 @@ type SimpleService struct {
 }
 
 // buat provider
-func NewSimpleRepository() *SimpleRepository {
+/*
+injector parameter,jika kita butuh parameter dinamis untuk dependency
+tinggal tambah aja ke provider nya
+*/
+func NewSimpleRepository(isError bool) *SimpleRepository {
 	return &SimpleRepository{
-		Error: true,
+		// injector parameter
+		Error: isError,
 	}
 }
 
