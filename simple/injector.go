@@ -30,10 +30,17 @@ func InitializedDatabaseRepository() *DatabaseRepository {
 	return nil
 }
 
+// contoh provider set
 var fooSet = wire.NewSet(NewFooRepository, NewFooService)
 var barSet = wire.NewSet(NewBarRepository, NewBarService)
 
 func InitializedFooBarService() *FooBarService {
 	wire.Build(fooSet, barSet, NewFooBarService)
+	return nil
+}
+
+// contoh struct provider
+func InititalizedFooBar() *FooBar {
+	wire.Build(NewFoo, NewBar, wire.Struct(new(FooBar), "*"))
 	return nil
 }

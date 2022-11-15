@@ -35,8 +35,20 @@ func InitializedFooBarService() *FooBarService {
 	return fooBarService
 }
 
+// contoh struct provider
+func InititalizedFooBar() *FooBar {
+	foo := NewFoo()
+	bar := NewBar()
+	fooBar := &FooBar{
+		Foo: foo,
+		Bar: bar,
+	}
+	return fooBar
+}
+
 // injector.go:
 
+// contoh provider set
 var fooSet = wire.NewSet(NewFooRepository, NewFooService)
 
 var barSet = wire.NewSet(NewBarRepository, NewBarService)
