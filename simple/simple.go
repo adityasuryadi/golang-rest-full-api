@@ -1,6 +1,8 @@
 package simple
 
-import "errors"
+import (
+	"errors"
+)
 
 type SimpleRepository struct {
 	Error bool

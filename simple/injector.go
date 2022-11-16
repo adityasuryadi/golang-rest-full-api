@@ -7,7 +7,11 @@ injector sama seperti provider namun berisi config google wire
 */
 package simple
 
-import "github.com/google/wire"
+import (
+	"github.com/google/wire"
+	"io"
+	"os"
+)
 
 /*
 untuk handle error tambahkan return error pada initializesService
@@ -63,4 +67,42 @@ var helloSet = wire.NewSet(
 func InitializedHelloService() *HelloService {
 	wire.Build(helloSet, NewHelloService)
 	return nil
+}
+
+// binding values
+// kadang ada kasus dimana kita ingin melakukan dependency injection terhadap value yang sudah ada,tanpa membuat provider
+var fooValue = &Foo{}
+var barValue = &Bar{}
+
+func InitializedFooBarUsingValue() *FooBar {
+	// ketika di manapun ada yang butuh barValue atau FooValue maka akan di inject ke provider nya
+	wire.Build(wire.Value(barValue), wire.Value(fooValue), wire.Struct(new(FooBar), "*"))
+	return nil
+}
+
+// injector interface value
+func InitalizedReader() io.Reader {
+	// ketika ada yang butuh io reader maka value nya di inject os.stdin
+	wire.Build(wire.InterfaceValue(new(io.Reader), os.Stdin))
+	return nil
+}
+
+// struct field provider
+// membuat provider dari field dari struct
+func InitializedConfiguration() *Configuration {
+	// membuat sebuah provider dari sebuah field dari data si Application dan ambil field nya
+	// google wire akan mencari di mana provider yang return value nya Application ambil data field configuration
+	wire.Build(
+		NewApplication,
+		wire.FieldsOf(new(*Application), "Configuration"),
+	)
+	return nil
+}
+
+// clean up function
+// jika provider membuat object yang membutuhkan proses clean up setelah object di buat,maka provider bisa mengembalikan closure
+
+func InitializedConnection(name string) (*Connection, func()) {
+	wire.Build(NewConnection, NewFile)
+	return nil, nil
 }

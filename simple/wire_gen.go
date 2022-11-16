@@ -8,6 +8,8 @@ package simple
 
 import (
 	"github.com/google/wire"
+	"io"
+	"os"
 )
 
 // Injectors from injector.go:
@@ -52,6 +54,48 @@ func InitializedHelloService() *HelloService {
 	return helloService
 }
 
+func InitializedFooBarUsingValue() *FooBar {
+	foo := _wireFooValue
+	bar := _wireBarValue
+	fooBar := &FooBar{
+		Foo: foo,
+		Bar: bar,
+	}
+	return fooBar
+}
+
+var (
+	_wireFooValue = fooValue
+	_wireBarValue = barValue
+)
+
+// injector interface value
+func InitalizedReader() io.Reader {
+	reader := _wireFileValue
+	return reader
+}
+
+var (
+	_wireFileValue = os.Stdin
+)
+
+// struct field provider
+// membuat provider dari field dari struct
+func InitializedConfiguration() *Configuration {
+	application := NewApplication()
+	configuration := application.Configuration
+	return configuration
+}
+
+func InitializedConnection(name string) (*Connection, func()) {
+	file, cleanup := NewFile(name)
+	connection, cleanup2 := NewConnection(file)
+	return connection, func() {
+		cleanup2()
+		cleanup()
+	}
+}
+
 // injector.go:
 
 // contoh provider set
@@ -64,3 +108,9 @@ var barSet = wire.NewSet(NewBarRepository, NewBarService)
 var helloSet = wire.NewSet(
 	NewSayHelloImpl, wire.Bind(new(SayHello), new(*SayHelloImpl)),
 )
+
+// binding values
+// kadang ada kasus dimana kita ingin melakukan dependency injection terhadap value yang sudah ada,tanpa membuat provider
+var fooValue = &Foo{}
+
+var barValue = &Bar{}
