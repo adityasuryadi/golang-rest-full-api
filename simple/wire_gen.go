@@ -46,9 +46,21 @@ func InititalizedFooBar() *FooBar {
 	return fooBar
 }
 
+func InitializedHelloService() *HelloService {
+	sayHelloImpl := NewSayHelloImpl()
+	helloService := NewHelloService(sayHelloImpl)
+	return helloService
+}
+
 // injector.go:
 
 // contoh provider set
 var fooSet = wire.NewSet(NewFooRepository, NewFooService)
 
 var barSet = wire.NewSet(NewBarRepository, NewBarService)
+
+// buat dulu menggunakan provider set
+// jadi kita beritahu kan menggunakan binding jika ada yang butuh SayHelloImpl return SayHello
+var helloSet = wire.NewSet(
+	NewSayHelloImpl, wire.Bind(new(SayHello), new(*SayHelloImpl)),
+)

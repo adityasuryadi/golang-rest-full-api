@@ -44,3 +44,23 @@ func InititalizedFooBar() *FooBar {
 	wire.Build(NewFoo, NewBar, wire.Struct(new(FooBar), "*"))
 	return nil
 }
+
+/* injector yang salah ketika binding interface
+salaha karena type data nya beda walaupun NewSayHelloImpl karena balikan nya struct NewSayHelloImpl
+karena NewHelloService return nya SayHello
+*/
+// func InititalizedHelloService() *HelloService {
+// 	wire.Build(NewHelloService, NewSayHelloImpl)
+// 	return nil
+// }
+
+// buat dulu menggunakan provider set
+// jadi kita beritahu kan menggunakan binding jika ada yang butuh SayHelloImpl return SayHello
+var helloSet = wire.NewSet(
+	NewSayHelloImpl, wire.Bind(new(SayHello), new(*SayHelloImpl)),
+)
+
+func InitializedHelloService() *HelloService {
+	wire.Build(helloSet, NewHelloService)
+	return nil
+}
